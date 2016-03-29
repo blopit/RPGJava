@@ -4,6 +4,8 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
+import art.Sprite;
+
 import java.util.ArrayList;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -14,8 +16,8 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 
 public abstract class Entity {
-	double x, y, z, w, h, zlen;
-	int depth;
+	protected double x, y, z, w, h, zlen;
+	protected int depth;
 	Sprite sprite;
 	Shape bounds;
 	boolean visible = true;

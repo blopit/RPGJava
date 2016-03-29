@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import core.Action;
-import core.DialogBox;
 import core.Game;
 import core.Unit;
 

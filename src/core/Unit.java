@@ -19,9 +19,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import art.AnimSprite;
+import art.BlendComposite;
+import art.Sprite;
 import Roleplaying.Roleplay;
-import composite.BlendComposite;
-import core.DialogBox.Button;
+import Roleplaying.DialogBox.Button;
 
 public class Unit extends Entity {
 
@@ -40,7 +42,7 @@ public class Unit extends Entity {
 
 	double maxhp, hp, dhp;
 	double weight = 0;
-	boolean talking = false;
+	private boolean talking = false;
 	boolean inrange = false;
 
 	public Roleplay role;
@@ -64,10 +66,10 @@ public class Unit extends Entity {
 		mvspd = max_mvspd;
 
 		sprite = new Sprite("/images/barb.png", 40, 80);
-		sprite.yscale = sprite.xscale = 0.5;
+		sprite.setYscale(sprite.setXscale(0.5));
 
 		wep = new Sprite("/images/axe.png", -30, 100);
-		wep.yscale = wep.xscale = 0.5;
+		wep.setYscale(wep.setXscale(0.5));
 
 		int fdata[] = { 0, 1, 1, 1, 1, 2 };
 		weapon = new AnimSprite("/images/axe_anim.png", 24, 29, 101, 108, 6,
@@ -92,9 +94,9 @@ public class Unit extends Entity {
 		}
 
 		if (vecX == 1) {
-			sprite.xscale = 0.5;
+			sprite.setXscale(0.5);
 		} else if (vecX == -1) {
-			sprite.xscale = -0.5;
+			sprite.setXscale(-0.5);
 		}
 
 		if (vecX != 0 || vecY != 0) {
@@ -128,7 +130,7 @@ public class Unit extends Entity {
 		if (attstun > 0)
 			attstun--;
 
-		if (talking == false && controlled) {
+		if (isTalking() == false && controlled) {
 			ArrayList<Unit> sights = new ArrayList<Unit>();
 			ArrayList<Entity> copy = new ArrayList<Entity>(Game.getObjects());
 			for (Entity y : copy) {
@@ -156,7 +158,7 @@ public class Unit extends Entity {
 
 		}
 		// ALL
-		if (controlled && attstun == 0 && talking == false) {
+		if (controlled && attstun == 0 && isTalking() == false) {
 			control();
 
 			if (Game.keyCheckPressed(KeyEvent.VK_Z) && ammo <= 0) {
@@ -272,13 +274,13 @@ public class Unit extends Entity {
 		// g2.setComposite(BlendComposite.Add);
 		sprite.draw(g2, x, y, 0);
 		// g2.setComposite(normal);
-		weapon.xscale = 2 * sprite.xscale;
+		weapon.setXscale(2 * sprite.getXscale());
 
 		if (inrange)
 			g2.drawString("?", (int) x, (int) y - 52);
 
 		int k = 1;
-		if (weapon.xscale < 0)
+		if (weapon.getXscale() < 0)
 			k = -1;
 
 		sight = new Arc2D.Double();
@@ -297,11 +299,11 @@ public class Unit extends Entity {
 		}
 		if (ammo != 0) {
 			if (!wep_flip) {
-				weapon.yscale = -1;
+				weapon.setYscale(-1);
 				weapon.draw(g2, x, y, angle + (k == -1 ? Math.PI : 0) + k
 						* Math.PI / 4, (ammo == 0) ? 0 : attspd - ammo);
 			} else {
-				weapon.yscale = 1;
+				weapon.setYscale(1);
 				weapon.draw(g2, x, y, angle + (k == -1 ? Math.PI : 0) - k
 						* Math.PI / 4, (ammo == 0) ? 0 : attspd - ammo);
 			}
@@ -312,6 +314,14 @@ public class Unit extends Entity {
 
 	public Shape getBounds() {
 		return new Ellipse2D.Double(x - w / 2, y - h / 2, w, h);
+	}
+
+	public boolean isTalking() {
+		return talking;
+	}
+
+	public void setTalking(boolean talking) {
+		this.talking = talking;
 	}
 
 }

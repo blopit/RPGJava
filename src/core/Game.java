@@ -32,7 +32,8 @@ import java.util.regex.Pattern;
 
 import javax.swing.JPanel;
 
-import composite.BlendComposite;
+import art.BlendComposite;
+import Roleplaying.DialogBox;
 
 public class Game extends JPanel implements Runnable, MouseListener,
 		MouseMotionListener {

@@ -10,7 +10,7 @@ import java.awt.Shape;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import composite.BlendComposite;
+import art.BlendComposite;
 
 public class Particle extends Entity {
 	double xsp, ysp;
