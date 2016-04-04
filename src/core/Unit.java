@@ -48,7 +48,8 @@ public class Unit extends Entity {
 	public Roleplay role;
 
 	private Shape sight;
-	private double sight_radius = 128;
+	private double sight_radius = 256;
+	private double sight_arc = 120;
 
 	public Unit(int x_, int y_, int z_) {
 		super(x_, y_, null);
@@ -112,8 +113,6 @@ public class Unit extends Entity {
 
 		if (d > mvspd / 600) {
 			d = mvspd / 600;
-		} else if (vecX == 0 && vecY == 0) {
-			// d = Game.fric(d, ground_fric);
 		}
 
 		hsp = Math.cos(angle) * d;
@@ -122,6 +121,10 @@ public class Unit extends Entity {
 
 	public void step() {
 		depth = (int) -y;
+		sight = new Arc2D.Double();
+		((Arc2D) sight).setArcByCenter(x, y, sight_radius, -sight_arc/2 - angle * 180
+				/ Math.PI, sight_arc, Arc2D.PIE);
+		
 		if (ammo > 0)
 			ammo--;
 		if (ammo < 0)
@@ -282,10 +285,6 @@ public class Unit extends Entity {
 		int k = 1;
 		if (weapon.getXscale() < 0)
 			k = -1;
-
-		sight = new Arc2D.Double();
-		((Arc2D) sight).setArcByCenter(x, y, sight_radius, -60 - angle * 180
-				/ Math.PI, 120, Arc2D.PIE);
 
 		if (ammo == attspd - 1) {
 			wep_flip = !wep_flip;

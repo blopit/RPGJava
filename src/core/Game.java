@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.JPanel;
 
+import language.language;
 import art.BlendComposite;
 import Roleplaying.DialogBox;
 
@@ -57,12 +58,6 @@ public class Game extends JPanel implements Runnable, MouseListener,
 	public static Point.Double mouse = new Point.Double(0, 0);
 	public static final Point.Double origin = new Point.Double(0, 0);
 
-	public class KeyboardDuplicate extends Exception {
-		public KeyboardDuplicate(String message) {
-			super(message);
-		}
-	}
-
 	public Game() {
 		addKeyListener(new KL());
 		addMouseListener(this);
@@ -71,6 +66,9 @@ public class Game extends JPanel implements Runnable, MouseListener,
 		setFocusable(true);
 		setDoubleBuffered(true);
 
+		new language();
+		System.exit(0);
+		
 		current_room = new Room();
 		Unit u1 = new Unit(128, 128, 0);
 		u1.controlled = true;
@@ -120,8 +118,6 @@ public class Game extends JPanel implements Runnable, MouseListener,
 
 		Graphics2D g2 = off_Image.createGraphics();
 
-		// g2d.setComposite(BlendComposite.Add.derive(0.75f));
-		// g2d.setComposite(acomp);
 		ArrayList<Entity> copy = new ArrayList<Entity>(getObjects());
 		for (Entity x : copy) {
 			if (x.visible)
@@ -129,7 +125,6 @@ public class Game extends JPanel implements Runnable, MouseListener,
 		}
 
 		g2d.drawImage(off_Image, 0, 0, null);
-		// Toolkit.getDefaultToolkit().sync();
 		g2d.dispose();
 		g2.dispose();
 	}
@@ -241,11 +236,9 @@ public class Game extends JPanel implements Runnable, MouseListener,
 			int code = e.getKeyCode();
 			keys.remove(code);
 			keysPressed.remove(code);
-			// if (!keysReleased.contains(code)) {
 			keysReleased.add(code);
 			System.out.println("Key released code=" + e.getKeyCode()
 					+ ", char=" + e.getKeyChar());
-			// }
 		}
 	}
 
@@ -323,6 +316,15 @@ public class Game extends JPanel implements Runnable, MouseListener,
 		public E random() {
 			return values[RND.nextInt(values.length)];
 		}
+	}
+	
+	public static long stringToSeed(String strSeed){
+		long seed = 0;
+		for (int i=0;i<strSeed.length();i++)
+		{
+		      seed+=(int)strSeed.charAt(i);
+		}   
+		return seed;
 	}
 
 	public static int randInt(int min, int max) {
