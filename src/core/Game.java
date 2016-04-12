@@ -18,6 +18,9 @@ import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.ArrayDeque;
@@ -32,9 +35,8 @@ import java.util.regex.Pattern;
 
 import javax.swing.JPanel;
 
-import language.language;
+import roleplay.DialogBox;
 import art.BlendComposite;
-import Roleplaying.DialogBox;
 
 public class Game extends JPanel implements Runnable, MouseListener,
 		MouseMotionListener {
@@ -65,9 +67,29 @@ public class Game extends JPanel implements Runnable, MouseListener,
 		setBackground(Color.BLACK);
 		setFocusable(true);
 		setDoubleBuffered(true);
+		
+		Connection c = null;
+	    Statement stmt = null;
+	    /*try {
+	      Class.forName("org.sqlite.JDBC");
+	      c = DriverManager.getConnection("jdbc:sqlite:test.db");
+	      System.out.println("Opened database successfully");
 
-		new language();
-		System.exit(0);
+	      stmt = c.createStatement();
+	      String sql = "CREATE TABLE COMPANY " +
+	                   "(ID INT PRIMARY KEY     NOT NULL," +
+	                   " NAME           TEXT    NOT NULL, " + 
+	                   " AGE            INT     NOT NULL, " + 
+	                   " ADDRESS        CHAR(50), " + 
+	                   " SALARY         REAL)"; 
+	      stmt.executeUpdate(sql);
+	      stmt.close();
+	      c.close();
+	    } catch ( Exception e ) {
+	      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+	      System.exit(0);
+	    }
+	    System.out.println("Table created successfully");*/
 		
 		current_room = new Room();
 		Unit u1 = new Unit(128, 128, 0);
@@ -126,6 +148,7 @@ public class Game extends JPanel implements Runnable, MouseListener,
 
 		g2d.drawImage(off_Image, 0, 0, null);
 		g2d.dispose();
+		off_Image.flush();
 		g2.dispose();
 	}
 

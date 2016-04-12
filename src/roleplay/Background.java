@@ -1,4 +1,4 @@
-package Roleplaying;
+package roleplay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import roleplay.Roleplay.Tag;
 import core.Game;
-import Roleplaying.Roleplay.Tag;
 
 public class Background {
 	ArrayList<Tag> tags = new ArrayList<Tag>();

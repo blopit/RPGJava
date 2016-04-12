@@ -1,4 +1,4 @@
-package Roleplaying;
+package roleplay;
 
 import java.awt.Color;
 import java.awt.Font;

@@ -1,4 +1,4 @@
-package Roleplaying;
+package roleplay;
 
 import java.util.ArrayList;
 import java.util.HashMap;

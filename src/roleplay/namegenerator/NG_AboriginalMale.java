@@ -1,4 +1,4 @@
-package namegenerator;
+package roleplay.namegenerator;
 import java.util.Arrays;
 
 public class NG_AboriginalMale extends NameGenerator {

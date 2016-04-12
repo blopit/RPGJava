@@ -1,8 +1,8 @@
-package namegenerator;
+package roleplay.namegenerator;
 import java.util.Arrays;
 
-public class NG_OrcFemale extends NameGenerator {
-	public NG_OrcFemale() {
+public class NG_OrcMale extends NameGenerator {
+	public NG_OrcMale() {
 		String demoVocals[] = { "a", "u", "o" };
 
 		String demoStartConsonants[] = { "at", "az", "bag", "bar", "bak",
@@ -17,7 +17,7 @@ public class NG_OrcFemale extends NameGenerator {
 
 		String demofemaleEnd[] = { "a", "ob", "i", "ah", "ai", "sai", "ahk" };
 
-		String nameInstructions[] = { "cvdf", "cf"};
+		String nameInstructions[] = { "cvd" };
 
 		this.vocals.addAll(Arrays.asList(demoVocals));
 		this.startConsonants.addAll(Arrays.asList(demoStartConsonants));

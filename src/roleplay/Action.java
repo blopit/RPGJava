@@ -1,9 +1,9 @@
-package Roleplaying;
+package roleplay;
 
 import java.util.ArrayList;
 
-import Roleplaying.Roleplay.Emote;
-import Roleplaying.Roleplay.Tag;
+import roleplay.Roleplay.Emote;
+import roleplay.Roleplay.Tag;
 
 public abstract class Action {
 	protected class ActionTag {

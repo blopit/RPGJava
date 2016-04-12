@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import roleplay.Roleplay;
+import roleplay.DialogBox.Button;
 import art.AnimSprite;
 import art.BlendComposite;
 import art.Sprite;
-import Roleplaying.Roleplay;
-import Roleplaying.DialogBox.Button;
 
 public class Unit extends Entity {
 

@@ -2,7 +2,7 @@ package core;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import Roleplaying.Background;
+import roleplay.Background;
 
 public class RPGFrame extends JFrame {
 

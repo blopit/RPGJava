@@ -1,17 +1,13 @@
-package language;
+package roleplay.language;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import core.Game;
-import namegenerator.NG_OldEnglishMale;
-import namegenerator.NameGenerator;
+import roleplay.namegenerator.NG_OldEnglishMale;
+import roleplay.namegenerator.NameGenerator;
 
 public class language {
 
@@ -162,6 +158,12 @@ public class language {
 		global_fct = 1.0;
 		parseLanguage(randomLanguage(random.nextInt()*031365));
 		
+		//Talker talker = new Talker();
+		//Converter c = new Converter();
+		//String s = c.getPhoneWord("hello my name is green eye jim");
+		
+		//System.out.println(s);
+        //talker.sayPhoneWord(s);
 		
 		System.out.println(translate(input));
 	}

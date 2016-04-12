@@ -1,4 +1,4 @@
-package Roleplaying;
+package roleplay;
 
 public class CutsceneEvent {
 	public enum scene {
