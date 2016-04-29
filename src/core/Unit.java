@@ -66,14 +66,14 @@ public class Unit extends Entity {
 
 		mvspd = max_mvspd;
 
-		sprite = new Sprite("/images/barb.png", 40, 80);
+		sprite = new Sprite("/res/images/units/barb.png", 40, 80);
 		sprite.setYscale(sprite.setXscale(0.5));
 
-		wep = new Sprite("/images/axe.png", -30, 100);
+		wep = new Sprite("/res/images/weapons/axe/axe.png", -30, 100);
 		wep.setYscale(wep.setXscale(0.5));
 
 		int fdata[] = { 0, 1, 1, 1, 1, 2 };
-		weapon = new AnimSprite("/images/axe_anim.png", 24, 29, 101, 108, 6,
+		weapon = new AnimSprite("/res/images/weapons/axe/axe_anim.png", 24, 29, 101, 108, 6,
 				fdata);
 	}
 

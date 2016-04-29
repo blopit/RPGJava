@@ -1,25 +1,20 @@
 package core;
 
 import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Statement;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
@@ -29,21 +24,19 @@ import java.util.HashSet;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.JPanel;
 
 import roleplay.DialogBox;
-import art.BlendComposite;
+import core.battle.Battle;
 
 public class Game extends JPanel implements Runnable, MouseListener,
 		MouseMotionListener {
 	private static final long serialVersionUID = 1L;
 
 	private Thread animator;
-	private final int FPS = 1000 / 60;
+	public static double TARGET_FPS = 60.0;
+	private final int FPS = (int) (1000 / TARGET_FPS);
 	public static double spdf = 1.0;
 
 	public static long time = 0;
@@ -92,12 +85,15 @@ public class Game extends JPanel implements Runnable, MouseListener,
 	    System.out.println("Table created successfully");*/
 		
 		current_room = new Room();
-		Unit u1 = new Unit(128, 128, 0);
+		/*Unit u1 = new Unit(128, 128, 0);
 		u1.controlled = true;
 		u1.weight = 1;
 		addEntity(u1);
 		addEntity(new Unit(128, 156, 0));
 		addEntity(new Block(256, 0, 32, 256));
+		*/
+		
+		addEntity(new Battle());
 	}
 
 	public static void addEvent(DialogBox e) {
@@ -354,5 +350,12 @@ public class Game extends JPanel implements Runnable, MouseListener,
 		Random rand = new Random();
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
+	}
+	
+	public static Color hex2Rgb(String colorStr) {
+	    return new Color(
+	            Integer.valueOf( colorStr.substring( 1, 3 ), 16 ),
+	            Integer.valueOf( colorStr.substring( 3, 5 ), 16 ),
+	            Integer.valueOf( colorStr.substring( 5, 7 ), 16 ) );
 	}
 }

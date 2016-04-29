@@ -35,10 +35,7 @@ public class language {
 	}
 
 	public String getFromPool(StringBuilder s) {
-		int index = (int) (random.nextDouble() * s.length());
-		char c = s.charAt(index);
-		s.deleteCharAt(index);
-		return String.valueOf(c) + "\n";
+		return getFromPoolNoNew(s) + "\n";
 	}
 
 	public String getFromPoolNoNew(StringBuilder s) {
