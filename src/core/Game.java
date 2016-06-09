@@ -60,39 +60,31 @@ public class Game extends JPanel implements Runnable, MouseListener,
 		setBackground(Color.BLACK);
 		setFocusable(true);
 		setDoubleBuffered(true);
-		
-		Connection c = null;
-	    Statement stmt = null;
-	    /*try {
-	      Class.forName("org.sqlite.JDBC");
-	      c = DriverManager.getConnection("jdbc:sqlite:test.db");
-	      System.out.println("Opened database successfully");
 
-	      stmt = c.createStatement();
-	      String sql = "CREATE TABLE COMPANY " +
-	                   "(ID INT PRIMARY KEY     NOT NULL," +
-	                   " NAME           TEXT    NOT NULL, " + 
-	                   " AGE            INT     NOT NULL, " + 
-	                   " ADDRESS        CHAR(50), " + 
-	                   " SALARY         REAL)"; 
-	      stmt.executeUpdate(sql);
-	      stmt.close();
-	      c.close();
-	    } catch ( Exception e ) {
-	      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-	      System.exit(0);
-	    }
-	    System.out.println("Table created successfully");*/
-		
+		Connection c = null;
+		Statement stmt = null;
+		/*
+		 * try { Class.forName("org.sqlite.JDBC"); c =
+		 * DriverManager.getConnection("jdbc:sqlite:test.db");
+		 * System.out.println("Opened database successfully");
+		 * 
+		 * stmt = c.createStatement(); String sql = "CREATE TABLE COMPANY " +
+		 * "(ID INT PRIMARY KEY     NOT NULL," +
+		 * " NAME           TEXT    NOT NULL, " +
+		 * " AGE            INT     NOT NULL, " + " ADDRESS        CHAR(50), " +
+		 * " SALARY         REAL)"; stmt.executeUpdate(sql); stmt.close();
+		 * c.close(); } catch ( Exception e ) { System.err.println(
+		 * e.getClass().getName() + ": " + e.getMessage() ); System.exit(0); }
+		 * System.out.println("Table created successfully");
+		 */
+
 		current_room = new Room();
-		/*Unit u1 = new Unit(128, 128, 0);
-		u1.controlled = true;
-		u1.weight = 1;
-		addEntity(u1);
-		addEntity(new Unit(128, 156, 0));
-		addEntity(new Block(256, 0, 32, 256));
-		*/
-		
+		/*
+		 * Unit u1 = new Unit(128, 128, 0); u1.controlled = true; u1.weight = 1;
+		 * addEntity(u1); addEntity(new Unit(128, 156, 0)); addEntity(new
+		 * Block(256, 0, 32, 256));
+		 */
+
 		addEntity(new Battle());
 	}
 
@@ -245,8 +237,8 @@ public class Game extends JPanel implements Runnable, MouseListener,
 			if (!keys.contains(code)) {
 				keys.add(code);
 				keysPressed.add(code);
-				System.out.println("Key pressed code=" + e.getKeyCode() + ", char="
-						+ e.getKeyChar());
+				System.out.println("Key pressed code=" + e.getKeyCode()
+						+ ", char=" + e.getKeyChar());
 			}
 			keysReleased.remove(code);
 		}
@@ -281,6 +273,19 @@ public class Game extends JPanel implements Runnable, MouseListener,
 
 	public static double distPoints(Point.Double p1, Point.Double p2) {
 		return Math.hypot(p2.x - p1.x, p2.y - p1.y);
+	}
+
+	public static Point.Double smoothSlope(double sx, double sy, double dx,
+			double dy, double amount) {
+		Point.Double s1 = new Point.Double(sx, sy);
+		Point.Double d1 = new Point.Double(dx, dy);
+		double dist = Game.distPoints(s1, d1);
+		double angle = Game.anglePoints(s1, d1);
+
+		double vx = s1.x + Math.cos(angle) * dist * amount;
+		double vy = s1.y + Math.sin(angle) * dist * amount;
+
+		return new Point.Double(vx, vy);
 	}
 
 	public static double fric(double q, double fr) {
@@ -336,13 +341,12 @@ public class Game extends JPanel implements Runnable, MouseListener,
 			return values[RND.nextInt(values.length)];
 		}
 	}
-	
-	public static long stringToSeed(String strSeed){
+
+	public static long stringToSeed(String strSeed) {
 		long seed = 0;
-		for (int i=0;i<strSeed.length();i++)
-		{
-		      seed+=(int)strSeed.charAt(i);
-		}   
+		for (int i = 0; i < strSeed.length(); i++) {
+			seed += (int) strSeed.charAt(i);
+		}
 		return seed;
 	}
 
@@ -351,11 +355,10 @@ public class Game extends JPanel implements Runnable, MouseListener,
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 		return randomNum;
 	}
-	
+
 	public static Color hex2Rgb(String colorStr) {
-	    return new Color(
-	            Integer.valueOf( colorStr.substring( 1, 3 ), 16 ),
-	            Integer.valueOf( colorStr.substring( 3, 5 ), 16 ),
-	            Integer.valueOf( colorStr.substring( 5, 7 ), 16 ) );
+		return new Color(Integer.valueOf(colorStr.substring(1, 3), 16),
+				Integer.valueOf(colorStr.substring(3, 5), 16), Integer.valueOf(
+						colorStr.substring(5, 7), 16));
 	}
 }

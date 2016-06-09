@@ -8,11 +8,12 @@ import java.util.ArrayList;
 
 import core.Entity;
 import core.Game;
+import core.battle.Passive.LOC;
 
 public class Battle extends Entity {
 
 	static boolean normal;
-	
+
 	ArrayList<Unit> units = new ArrayList<Unit>();
 	static ArrayList<Animation> anim = new ArrayList<Animation>();
 
@@ -39,6 +40,8 @@ public class Battle extends Entity {
 			if (FRAME >= MAXFRAME) {
 				anim.remove(this);
 				FRAME = 0;
+				unit.x = unit.startX;
+				unit.y = unit.startY;
 			}
 		}
 	}
@@ -56,25 +59,32 @@ public class Battle extends Entity {
 	}
 
 	public enum Phase {
-		WAIT, READY, CAST
+		WAIT,
+		READY,
+		CAST
 	}
 
 	public enum DamageType {
-		PHYS, MAG, MIXED, PURE, NONE
+		PHYS,
+		MAG,
+		MIXED,
+		PURE,
+		NONE
 	}
 
 	public abstract class Unit {
-		int HP;
-		int MAXHP;
-		int SPD;
-		int RES;
-		int MAXRES;
-		int CDR;
-		int ATTSPD;
-		int DEF;
-		int MDEF;
-		int x;
-		int y;
+		int HP, MAXHP, RES, MAXRES;
+
+		int SPD, CDR, ATTSPD, CRIT;
+
+		int STR, INT;
+		int DEF, MDEF;
+		int x, y, startX, startY;
+
+		int anchorX;
+		int anchorY;
+		int dx;
+		int dy;
 
 		double dhp;
 		double wait_time;
@@ -89,8 +99,8 @@ public class Battle extends Entity {
 		ArrayList<Passive> passives = new ArrayList<Passive>();
 
 		public Unit(int _x, int _y, int hp, int spd) {
-			x = _x;
-			y = _y;
+			startX = x = _x;
+			startY = y = _y;
 			dhp = HP = MAXHP = hp;
 			SPD = spd;
 			phase = Phase.WAIT;
@@ -120,6 +130,8 @@ public class Battle extends Entity {
 			default:
 				break;
 			}
+
+			Passive.tickLOC(LOC.constant, this, this, null);
 		}
 
 		public void drawBar(Graphics2D g2, Color col, int x, int y, int w,
@@ -138,6 +150,13 @@ public class Battle extends Entity {
 			double h = HP * 1.0 / MAXHP;
 			dhp += (HP - dhp) * 0.03;
 
+			g2.setColor(Color.GREEN);
+
+			int xxx = x + 32;
+			int yyy = y + 32;
+
+			g2.fillRect(xxx - 16, yyy - 16, 32, 32);
+
 			int W = 128;
 			int H = 12;
 
@@ -147,13 +166,13 @@ public class Battle extends Entity {
 			if (w < 1.0) {
 				drawBar(g2, Color.CYAN, x, y, W, H, w);
 				g2.setColor(new Color(0, 0, 0, 64));
-				for (int i = 0; i < max_wait_time / tfps; i++) {
+				for (int i = 0; i < max_wait_time / (tfps / 2); i++) {
 					int xx = (int) (x + W * i * (tfps / max_wait_time));
 					g2.setStroke(new BasicStroke(2));
 					g2.drawLine(xx, y, xx, y + H);
 				}
 				g2.setColor(new Color(0, 0, 0, 32));
-				for (int i = 1; i < max_wait_time / (tfps / 2); i += 2) {
+				for (int i = 1; i < max_wait_time / (tfps / 4); i += 2) {
 					int xx = (int) (x + W * i * ((tfps / 2) / max_wait_time));
 					g2.setStroke(new BasicStroke(1));
 					g2.drawLine(xx, y + 3, xx, y + H - 4);
@@ -206,21 +225,36 @@ public class Battle extends Entity {
 
 	public class Ally extends Unit {
 		public Ally() {
-			super(32, 32, 500, 5);
+			super(200, 256, 500, 50);
 			this.abilties.add(new Ability.Chop(this));
+			this.abilties.add(new Ability.Bolt(this));
+			this.abilties.add(new Ability.Bolt(this));
+			this.abilties.add(new Ability.Chop(this));
+
+			this.passives.add(new Passive.p_HoT(30, -2, 30));
 		}
 	}
 
 	public class Enemy extends Unit {
 		public Enemy() {
-			super(320, 32, 300, 50);
+			super(400, 256, 300, 100);
 			this.abilties.add(new Ability.Bolt(this));
+			this.abilties.add(new Ability.Bolt(this));
+			this.abilties.add(new Ability.Bolt(this));
+			this.abilties.add(new Ability.Chop(this));
 		}
 	}
 
 	public static void deal_damage(Unit source, Unit target, double damage,
 			DamageType type) {
 		target.HP -= damage;
+	}
+
+	public static void heal(Unit source, Unit target, double heal) {
+		target.HP += heal;
+		if (target.HP > target.MAXHP) {
+			target.HP = target.MAXHP;
+		}
 	}
 
 	public double basicMit(double def) {
@@ -230,7 +264,7 @@ public class Battle extends Entity {
 
 	public void step() {
 		if (anim.isEmpty()) {
-			
+
 			for (Unit u : units) {
 				if (ready_unit == u) {
 					if (u.phase == Phase.READY) {
@@ -248,7 +282,7 @@ public class Battle extends Entity {
 
 				}
 			}
-			
+
 		} else {
 			anim.get(0).step();
 		}

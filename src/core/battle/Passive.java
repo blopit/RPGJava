@@ -19,7 +19,7 @@ public abstract class Passive {
 			return o2.prio.val - o1.prio.val;
 		}
 	}
-	
+
 	public class PassiveContComparator implements Comparator<PassiveContainer> {
 		@Override
 		public int compare(PassiveContainer o1, PassiveContainer o2) {
@@ -123,7 +123,7 @@ public abstract class Passive {
 		Collections.sort(targ.passives, new PassiveComparator());
 	}
 
-	public void removePassive(Unit src, Unit targ, Passive p) {
+	public static void removePassive(Unit src, Unit targ, Passive p) {
 		Battle.normal = true;
 
 		if (Battle.normal) {
@@ -131,44 +131,68 @@ public abstract class Passive {
 			targ.passives.remove(p);
 		}
 	}
-	
-	public void execute(LOC loc, Unit src, Unit targ, Map<String, Object> list){
-		for (Passive p : src.passives){
-			if (p.locs.contains(loc)){
+
+	public static Map<String, Object> tickLOC(LOC loc, Unit src, Unit targ,
+			Map<String, Object> list) {
+		for (Passive p : src.passives) {
+			p.timer++;
+			if (p.dur != -1 && p.timer > p.dur) {
+				removePassive(src, src, p);
+			} else if (p.locs.contains(loc) && p.timer % p.tick == 0) {
 				list = p.process(src, targ, list);
 			}
 		}
+		return list;
 	}
-	
+
+	public Map<String, Object> executeLOC(LOC loc, Unit src, Unit targ,
+			Map<String, Object> list) {
+		for (Passive p : src.passives) {
+			if (p.locs.contains(loc)) {
+				list = p.process(src, targ, list);
+			}
+		}
+		return list;
+	}
+
 	private class PassiveContainer {
 		Passive passive;
 		Unit src;
 		Unit targ;
 		LOC loc;
-		public PassiveContainer(Passive _passive, Unit _src, Unit _targ, LOC _loc){
+
+		public PassiveContainer(Passive _passive, Unit _src, Unit _targ,
+				LOC _loc) {
 			passive = _passive;
 			src = _src;
 			targ = _targ;
 			loc = _loc;
 		}
 	}
-	public void doubleExecute(LOC locSrc, LOC locTar, Unit src, Unit targ, Map<String, Object> list){
+
+	public Map<String, Object> doubleExecuteLOC(LOC locSrc, LOC locTar,
+			Unit src, Unit targ, Map<String, Object> list) {
 		ArrayList<PassiveContainer> plist = new ArrayList<PassiveContainer>();
-		
-		for (Passive p : src.passives){
+
+		for (Passive p : src.passives) {
 			if (p.locs.contains(locSrc)) {
 				plist.add(new PassiveContainer(p, src, targ, locSrc));
 			}
 		}
-		
-		for (Passive p : targ.passives){
+
+		for (Passive p : targ.passives) {
 			if (p.locs.contains(locTar)) {
 				plist.add(new PassiveContainer(p, targ, src, locTar));
 			}
 		}
-		
+
 		Collections.sort(plist, new PassiveContComparator());
-		
+
+		for (PassiveContainer pc : plist) {
+			list = pc.passive.process(pc.src, pc.targ, list);
+		}
+
+		return list;
 	}
 
 	// /////////////////////////////////////////////////////////
@@ -221,14 +245,14 @@ public abstract class Passive {
 
 	// Damage over time
 	// ---------------------------------------------------------------------
-	public class p_DoT extends Passive {
+	public static class p_DoT extends Passive {
 		double damage;
 		DamageType type;
 
 		public p_DoT(double _damage, int _dur, int _tick, DamageType _type) {
 			super("Test DoT", new ArrayList<LOC>(Arrays.asList(LOC.constant)),
 					BUFFTYPE.DEBUFF);
-			this.damage = damage;
+			this.damage = _damage;
 			this.type = _type;
 		}
 
@@ -236,6 +260,26 @@ public abstract class Passive {
 		public Map<String, Object> process(Unit src, Unit targ,
 				final Map<String, Object> list) {
 			Battle.deal_damage(this.source, targ, damage, type);
+			return new HashMap<String, Object>() {
+			};
+		}
+	}
+
+	// Heal over time
+	// ---------------------------------------------------------------------
+	public static class p_HoT extends Passive {
+		double heal;
+
+		public p_HoT(double _damage, int _dur, int _tick) {
+			super("Test DoT", new ArrayList<LOC>(Arrays.asList(LOC.constant)),
+					BUFFTYPE.DEBUFF);
+			this.heal = _damage;
+		}
+
+		@Override
+		public Map<String, Object> process(Unit src, Unit targ,
+				final Map<String, Object> list) {
+			Battle.heal(this.source, targ, heal);
 			return new HashMap<String, Object>() {
 			};
 		}
