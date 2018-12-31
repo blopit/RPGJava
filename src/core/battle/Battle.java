@@ -252,9 +252,7 @@ public class Battle extends Entity {
 
 	public static void heal(Unit source, Unit target, double heal) {
 		target.HP += heal;
-		if (target.HP > target.MAXHP) {
-			target.HP = target.MAXHP;
-		}
+		if (target.HP > target.MAXHP) {target.HP = target.MAXHP; }
 	}
 
 	public double basicMit(double def) {
